@@ -56,7 +56,7 @@ def find_assignment_url(subject_year):
     for link in soup.find_all('a', href=True):
         url = link['href']
         if any(name in url
-               for name in ['oving', 'assignment', 'exercise', 'oppgaver']):
+               for name in ['oving', 'assignment', 'exercise', 'oppgaver', 'problems']):
             if not any(a in url for a in ['exam', 'eksamen', 'gruppe']):
                 return url
     return ""
@@ -144,18 +144,26 @@ def get_first_existing_substring(filename, list_of_numberstring, year,
 
 def get_new_filename(filename, numbers, year, subjectname):
     ex_or_sol = ""
-    if any(s in filename for s in ["sol", "lf", "oppg"]):
-        ex_or_sol = "lf"
-    elif any(e in filename
-             for e in
-             ["assignment", "ex", "prob", "ov", "hw", "_ving", "l_osning"]):
-        ex_or_sol = "ex"
+    idx = 0
+    for s in ["sol", "lf", "oppg", "LF"]:
+        if s in filename:
+            idx = filename.index(s)
+            ex_or_sol = "lf"
+            break
+    if not ex_or_sol:
+        for e in ["assignment", "ex", "prob", "ov", "hw", "_ving", "l_osning", "oving"]:
+            if e in filename:
+                idx = filename.index(e)
+                ex_or_sol = "ex"
+                break
+
     if ex_or_sol:
-        str_num = get_first_existing_substring(filename, numbers, year,
+        str_num = get_first_existing_substring(filename[idx::], numbers, year,
                                                subjectname)
         if str_num:
-            return '{}-{}-{}-{}.pdf'.format(subjectname, year, ex_or_sol,
-                                            str_num.zfill(2))
+            return '{}-{}-{}-{}.pdf'.format(subjectname, year,
+                                            str_num.zfill(2),
+                                            ex_or_sol)
     return ""
 
 
@@ -178,7 +186,7 @@ def get_all_urls_from_subject(subject):
         elif subject[0:4] == "/tma":
             subjectname = subject[1:8]
         else:
-            return ""
+            subjectname = ""
         subj["name"] = subjectname
         subj["paths"] = list()
         subj["filenames"] = list()

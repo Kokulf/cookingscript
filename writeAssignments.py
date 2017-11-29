@@ -49,6 +49,9 @@ def download_subject_solutions(subject):
             pass
     return True
 
+download_subject_solutions("/ma1101")
+# subject_info = get_all_urls_from_subject("/tma4140")
+# print(subject_info)
 # for subject in find_subjects():
 #     print(subject)
 #     download_subject_solutions(subject)
