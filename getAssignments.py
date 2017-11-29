@@ -160,6 +160,9 @@ def get_new_filename(filename, numbers, year, subjectname):
     if ex_or_sol:
         str_num = get_first_existing_substring(filename[idx::], numbers, year,
                                                subjectname)
+        if not str_num:
+            str_num = get_first_existing_substring(filename, numbers, year,
+                                               subjectname)
         if str_num:
             return '{}-{}-{}-{}.pdf'.format(subjectname, year,
                                             str_num.zfill(2),
@@ -191,7 +194,11 @@ def get_all_urls_from_subject(subject):
         subj["paths"] = list()
         subj["filenames"] = list()
         for pdf in get_assignments_from_subject(subject):
-            subj["paths"].append(baseurl + pdf)
+            if pdf.startswith( 'http' ):
+                subj["paths"].append(pdf)
+            else:
+                subj["paths"].append(baseurl + pdf)
+
             filename = pdf.rsplit('/', 1)[-1]
             new_filename = get_new_filename(filename, numbers, year,
                                             subjectname)
