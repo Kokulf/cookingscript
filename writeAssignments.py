@@ -1,8 +1,5 @@
-# This assumes that the "kok" project from "kokulf" lies in the same path
-
-# from bs4 import BeautifulSoup
-# import urllib.request
-# import re
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 
 import getAssignments
@@ -52,6 +49,6 @@ def download_subject_solutions(subject):
             pass
     return True
 
-for subject in find_subjects():
-    print(subject)
-    download_subject_solutions(subject)
+# for subject in find_subjects():
+#     print(subject)
+#     download_subject_solutions(subject)
